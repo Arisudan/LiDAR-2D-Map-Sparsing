@@ -77,11 +77,19 @@ On Windows, check **Device Manager → Ports (COM & LPT)**.
 
 Two Python libraries are required: `pyserial` (serial communication) and `rplidar-roboticia` (LiDAR driver).
 
+**Linux (Raspberry Pi OS / Ubuntu):**
 ```bash
 pip install pyserial rplidar-roboticia --break-system-packages
 ```
 
-> On most desktop systems, the `--break-system-packages` flag is not needed. Include it only if `pip` refuses to install due to an "externally managed environment" error (common on newer Raspberry Pi OS / Debian releases).
+> The `--break-system-packages` flag is only needed if `pip` refuses to install due to an "externally managed environment" error (common on newer Raspberry Pi OS / Debian releases).
+
+**Windows:**
+```bash
+pip install pyserial rplidar-roboticia
+```
+
+> No special flags are required on Windows.
 
 ---
 
@@ -179,8 +187,14 @@ if __name__ == '__main__':
 
 ## 8. Step 6 — Run the Script
 
+**Linux:**
 ```bash
 python3 lidar_logger.py
+```
+
+**Windows:**
+```bash
+python lidar_logger.py
 ```
 
 Expected console output on success:
@@ -255,6 +269,45 @@ flowchart TD
 
 ---
 
+## 12. Windows vs Linux Execution
+
+The script itself is fully cross-platform — `pyserial` and `rplidar-roboticia` both support Windows natively. The differences between platforms are limited to port naming, permissions, and driver setup, summarized below.
+
+```mermaid
+flowchart TD
+    Start["Choose Operating System"] --> Lin["Linux (Raspberry Pi / Ubuntu)"]
+    Start --> Win["Windows"]
+
+    Lin --> L1["Port: /dev/ttyUSB0"]
+    Lin --> L2["Grant dialout group access"]
+    Lin --> L3["Run: python3 lidar_logger.py"]
+
+    Win --> W1["Port: COM3, COM4, etc."]
+    Win --> W2["No permission step required"]
+    Win --> W3["May need CP210x / CH340 driver"]
+    Win --> W4["Run: python lidar_logger.py"]
+
+    classDef os fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef linux fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef windows fill:#dcfce7,stroke:#16a34a,color:#14532d
+    class Start os
+    class Lin,L1,L2,L3 linux
+    class Win,W1,W2,W3,W4 windows
+```
+
+| Aspect | Linux (Pi / Ubuntu) | Windows |
+|:---|:---|:---|
+| Port name | `/dev/ttyUSB0` | `COM3`, `COM4`, etc. |
+| Finding the port | `ls /dev/ttyUSB*` | Device Manager → Ports (COM & LPT) |
+| Permissions | Requires `sudo usermod -a -G dialout $USER` + reboot | Not required — serial access is granted by default |
+| USB driver | Usually built into the kernel | May require a **CP210x** or **CH340** USB-to-serial driver, depending on the LiDAR's adapter chip |
+| Install command | `pip install pyserial rplidar-roboticia --break-system-packages` | `pip install pyserial rplidar-roboticia` |
+| Run command | `python3 lidar_logger.py` | `python lidar_logger.py` |
+
+> **Windows-specific note:** If the LiDAR does not appear in Device Manager at all, install the USB-to-serial chip driver first (CP2102 is common on RPLidar units) — this is usually available as a free download from the chip manufacturer's website.
+
+---
+
 ## Summary
 
 - This workflow reads LiDAR data directly over a serial connection and writes it to a CSV file, without requiring ROS.
@@ -265,4 +318,11 @@ flowchart TD
 
 ---
 
-*Reference documentation compiled from project notes.*
+## Author & License
+
+**© 2026 Arisudan. All rights reserved.**
+
+This documentation and the accompanying workflow are authored and maintained by **Arisudan**.
+GitHub: [github.com/Arisudan](https://github.com/Arisudan)
+
+If this documentation helped you, consider giving the repository a **⭐ star** or a **🍴 fork** — it helps others discover the project and supports continued work on it.
