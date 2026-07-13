@@ -1,4 +1,4 @@
-# ROS Recording Workflow — Drone LiDAR Data
+# ROS Recording Workflow - Drone LiDAR Data
 
 This document explains how live 2D LiDAR data from a drone's companion computer is captured and saved as a file using ROS. Each section pairs a short explanation with a diagram to make the process clear for readers new to ROS.
 
