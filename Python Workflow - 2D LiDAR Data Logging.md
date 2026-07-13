@@ -1,4 +1,4 @@
-# CSV / Python Workflow — 2D LiDAR Data Logging
+# CSV / Python Workflow - 2D LiDAR Data Logging
 
 This document provides a complete, executable workflow for capturing 2D LiDAR data on a companion computer (e.g. Raspberry Pi) and saving it directly to a CSV file using Python — without ROS. It is written so a reader can start from a blank system and reach a working setup by following the steps in order.
 
